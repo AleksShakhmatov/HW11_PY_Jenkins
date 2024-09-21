@@ -15,6 +15,7 @@ def test_registration_form_demoqa(setup_browser):
 
     with allure.step("Open registrations form"):
         browser.open('/automation-practice-form')
+        browser.driver.execute_script("document.body.style.zoom='90%'")
         browser.element(".practice-form-wrapper").should(have.text("Student Registration Form"))
         browser.driver.execute_script("$('footer').remove()")
         browser.driver.execute_script("$('#fixedban').remove()")
