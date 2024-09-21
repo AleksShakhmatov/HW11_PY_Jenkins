@@ -3,19 +3,21 @@ from pathlib import Path
 import allure
 from allure_commons.types import Severity
 from selene import have, command
-import os
 
 
 @allure.tag("web")
 @allure.severity(Severity.MINOR)
-@allure.label("owner", "Аркадий Укупник")
-@allure.feature("Регистрация")
-@allure.story("Проверка заполнения формы регистрации")
+@allure.label("owner", "AleksSH")
+@allure.feature("Registration")
+@allure.story("Fill registration form check")
 def test_registration_form_demoqa(setup_browser):
     browser = setup_browser
 
     with allure.step("Open registrations form"):
         browser.open('/automation-practice-form')
+        browser.element(".practice-form-wrapper").should(have.text("Student Registration Form"))
+        browser.driver.execute_script("$('footer').remove()")
+        browser.driver.execute_script("$('#fixedban').remove()")
 
     with allure.step("Fill form"):
         browser.element('#firstName').type('Coluchy')
