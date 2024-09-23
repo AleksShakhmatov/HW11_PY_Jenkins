@@ -29,7 +29,7 @@ def setup_browser(request):
     browser_version = browser_version if browser_version != "" else DEFAULT_BROWSER_VERSION
     options = Options()
     selenoid_capabilities = {
-        "browserName": "chrome",
+        "browserName": "Chrome",
         "browserVersion": browser_version,
         "selenoid:options": {
             "enableVNC": True,
