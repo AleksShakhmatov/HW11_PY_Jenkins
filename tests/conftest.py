@@ -1,7 +1,7 @@
 import pytest
 from dotenv import load_dotenv
 from selene import browser
-from selenium import webdriver
+from selenium.webdriver import Remote
 from selenium.webdriver.chrome.options import Options
 
 from utils import attach
@@ -36,10 +36,8 @@ def setup_browser(request):
     }
     options.capabilities.update(selenoid_capabilities)
 
-    driver = webdriver.Remote(
-        command_executor=f"https://user1:1234@selenoid.autotests.cloud/wd/hub",
-        options=options
-    )
+    driver = Remote(command_executor=f"https://user1:1234@selenoid.autotests.cloud/wd/hub",
+                    options=options)
 
     browser.config.window_width = 1920
     browser.config.window_height = 1080
