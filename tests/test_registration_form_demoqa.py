@@ -2,7 +2,7 @@ from pathlib import Path
 
 import allure
 from allure_commons.types import Severity
-from selene import have, command
+from selene import have, command, browser
 
 
 @allure.tag("web")
@@ -10,15 +10,9 @@ from selene import have, command
 @allure.label("owner", "AleksSH")
 @allure.feature("Registration")
 @allure.story("Fill registration form check")
-def test_registration_form_demoqa(setup_browser):
-    browser = setup_browser
-
+def test_registration_form_demoqa():
     with allure.step("Open registrations form"):
         browser.open('/automation-practice-form')
-        browser.driver.execute_script("document.body.style.zoom='90%'")
-        browser.element(".practice-form-wrapper").should(have.text("Student Registration Form"))
-        browser.driver.execute_script("$('footer').remove()")
-        browser.driver.execute_script("$('#fixedban').remove()")
 
     with allure.step("Fill form"):
         browser.element('#firstName').type('Coluchy')
@@ -37,9 +31,9 @@ def test_registration_form_demoqa(setup_browser):
         browser.element("#react-select-3-input").type("Rajasthan").press_enter()
         browser.element("#react-select-4-input").type("Jaiselmer").press_enter()
         browser.element('#submit').press_enter()
-        browser.element("#example-modal-sizes-title-lg").should(have.text('Thanks for submitting the form'))
 
     with allure.step("Check form results"):
+        browser.element("#example-modal-sizes-title-lg").should(have.text('Thanks for submitting the form'))
         browser.element('.table').all('td').even.should(
             have.exact_texts('Coluchy Aleksandr', 'AC@ya.com', 'Male', '4455667788', '08 July,1986', 'Computer Science',
                              'Sports', '8.png', 'India', 'Rajasthan Jaiselmer'))
