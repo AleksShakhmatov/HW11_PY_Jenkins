@@ -2,58 +2,38 @@ from pathlib import Path
 
 import allure
 from allure_commons.types import Severity
-from selene import have
+from selene import have, command, browser
 
 
 @allure.tag("web")
 @allure.severity(Severity.MINOR)
-@allure.label("owner", "Аркадий Укупник")
-@allure.feature("Регистрация")
-@allure.story("Проверка заполнения формы регистрации")
-def test_complete_todo(setup_browser):
-    browser = setup_browser
-    browser.driver.execute_script("document.body.style.zoom='90%'")
-    with allure.step("Открыть форму"):
-        browser.open('automation-practice-form/')
-    with allure.step("Заполнить имя"):
-        browser.element('#firstName').type('Alex')
-    with allure.step("Заполнить фамилию"):
-        browser.element('#lastName').type('Smirnov')
-    with allure.step("Заполнить email"):
-        browser.element('#userEmail').type('alex.smirnov@gmail.com')
-    with allure.step("Заполнить пол"):
-        browser.element('.custom-control-label').click()
-    with allure.step("Заполнить номер телефона"):
-        browser.element('#userNumber').type('5648798798')
-    with allure.step("Заполнить изображение"):
-        browser.element('#uploadPicture').send_keys(str(Path(__file__).parent.parent.joinpath(f'resources/img.png')))
-    with allure.step("Заполнить дату рождения"):
-        browser.element('#dateOfBirthInput').click()
-        browser.element('.react-datepicker__month-select').click()
-        browser.element('.react-datepicker__month-select').element(
-            '[value="4"]').click()
-        browser.element('.react-datepicker__year-select').click()
-        browser.element('.react-datepicker__year-select').element('[value="2014"]').click()
-        browser.element('.react-datepicker__day--011').click()
-    with allure.step("Заполнить темы"):
-        browser.element('#subjectsInput').type('co').press_enter()
-    with allure.step("Заполнить хобби"):
-        browser.element('[for=hobbies-checkbox-1]').click()
-    with allure.step("Заполнить текущий адрес"):
-        browser.element("#currentAddress").type("Moscow, Manoilov Street, 64")
-    with allure.step("Заполнить страну"):
-        browser.element("#react-select-3-input").type("NCR").press_enter()
-        browser.element("#react-select-4-input").type("Gurgaon").press_enter()
-        browser.element('#submit').click()
-    with allure.step("Проверить форму"):
+@allure.label("owner", "AleksSH")
+@allure.feature("Registration")
+@allure.story("Fill registration form check")
+def test_registration_form_demoqa():
+    with allure.step("Open registrations form"):
+        browser.open('/automation-practice-form')
+
+    with allure.step("Fill form"):
+        browser.element('#firstName').type('Coluchy')
+        browser.element('#lastName').type('Aleksandr')
+        browser.element('#userEmail').type('AC@ya.com')
+        browser.element('[for="gender-radio-1"]').click()
+        browser.element("#userNumber").type('4455667788')
+        browser.element('#subjectsInput').type('computer').press_enter()
+        browser.element('#dateOfBirthInput').perform(command.js.scroll_into_view).click()
+        browser.element('.react-datepicker__month-select').click().element('[value="6"]').click()
+        browser.element('.react-datepicker__year-select').click().element('[value="1986"]').click()
+        browser.element('.react-datepicker__day--008').click()
+        browser.element('[for="hobbies-checkbox-1"]').click()
+        browser.element('#uploadPicture').send_keys(str(Path(__file__).parent.parent.joinpath(f'resources/8.png')))
+        browser.element('#currentAddress').type('India').press_enter()
+        browser.element("#react-select-3-input").type("Rajasthan").press_enter()
+        browser.element("#react-select-4-input").type("Jaiselmer").press_enter()
+        browser.element('#submit').press_enter()
+
+    with allure.step("Check form results"):
         browser.element("#example-modal-sizes-title-lg").should(have.text('Thanks for submitting the form'))
-        browser.element('.table').all('td').even.should(have.exact_texts('Alex Smirnov',
-                                                                         'alex.smirnov@gmail.com',
-                                                                         'Male',
-                                                                         '5648798798',
-                                                                         '11 May,2014',
-                                                                         'Computer Science',
-                                                                         'Sports',
-                                                                         'img.png',
-                                                                         'Moscow, Manoilov Street, 64',
-                                                                         'NCR Gurgaon'))
+        browser.element('.table').all('td').even.should(
+            have.exact_texts('Coluchy Aleksandr', 'AC@ya.com', 'Male', '4455667788', '08 July,1986', 'Computer Science',
+                             'Sports', '8.png', 'India', 'Rajasthan Jaiselmer'))
